@@ -23,14 +23,14 @@ public class ListenerService extends WearableListenerService{
 
         DataMap dataMap;
         for (DataEvent event : dataEvents) {
-
+            Log.v("myTag", "DataMap received on watch: " + DataMapItem.fromDataItem(event.getDataItem()).getDataMap());
             // Check the data type
             if (event.getType() == DataEvent.TYPE_CHANGED) {
                 // Check the data path
                 String path = event.getDataItem().getUri().getPath();
                 if (path.equals(WEARABLE_DATA_PATH)) {}
                 dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
-                Log.v("myTag", "DataMap received on watch: " + dataMap);
+
 
                 // Broadcast DataMap contents to wearable activity for display
                 // The content has the golf hole number and distances to the front,
@@ -38,10 +38,7 @@ public class ListenerService extends WearableListenerService{
 
                 Intent messageIntent = new Intent();
                 messageIntent.setAction(Intent.ACTION_SEND);
-                messageIntent.putExtra("hole", dataMap.getString("hole"));
-                messageIntent.putExtra("front", dataMap.getString("front"));
-                messageIntent.putExtra("middle", dataMap.getString("middle"));
-                messageIntent.putExtra("back", dataMap.getString("back"));
+                messageIntent.putExtra("datamap", dataMap.toBundle());
                 LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
 
             }

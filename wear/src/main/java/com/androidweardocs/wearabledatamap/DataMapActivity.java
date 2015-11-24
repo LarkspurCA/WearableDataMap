@@ -39,13 +39,13 @@ public class DataMapActivity extends WearableActivity {
     public class MessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String hole = intent.getStringExtra("hole");
-            String front = intent.getStringExtra("front");
-            String middle = intent.getStringExtra("middle");
-            String back = intent.getStringExtra("back");
-            Log.v("myTag", "Main activity received message: " + hole);
-            // Display message in UI
-            String display = "Received from the data Layer\nHole: " + hole + "\nFront: " + front + "\nMiddle: "+ middle + "\nBack: "+ back;
+            Bundle data = intent.getBundleExtra("datamap");
+            // Display received data in UI
+            String display = "Received from the data Layer\n" +
+                    "Hole: " + data.getString("hole") + "\n" +
+                    "Front: " + data.getString("front") + "\n" +
+                    "Middle: "+ data.getString("middle") + "\n" +
+                    "Back: " + data.getString("back");
             mTextView.setText(display);
         }
     }

@@ -2,6 +2,8 @@ package com.androidweardocs.wearabledatamap;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,10 +18,11 @@ import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
+import java.util.Calendar;
 import java.util.Date;
 
 
-public class DataMapActivity extends ActionBarActivity implements
+public class DataMapActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener{
 
@@ -47,8 +50,6 @@ public class DataMapActivity extends ActionBarActivity implements
 
     @Override
     public void onConnected(Bundle connectionHint) {
-
-        Log.v("myApp", "OnConnected entered");
 
         String WEARABLE_DATA_PATH = "/wearable_data";
 
@@ -113,20 +114,16 @@ public class DataMapActivity extends ActionBarActivity implements
         }
 
         public void run() {
-            NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(googleClient).await();
-            for (Node node : nodes.getNodes()) {
-
-                // Construct a DataRequest and send over the data layer
-                PutDataMapRequest putDMR = PutDataMapRequest.create(path);
-                putDMR.getDataMap().putAll(dataMap);
-                PutDataRequest request = putDMR.asPutDataRequest();
-                DataApi.DataItemResult result = Wearable.DataApi.putDataItem(googleClient,request).await();
-                if (result.getStatus().isSuccess()) {
-                    Log.v("myTag", "DataMap: " + dataMap + " sent to: " + node.getDisplayName());
-                } else {
-                    // Log an error
-                    Log.v("myTag", "ERROR: failed to send DataMap");
-                }
+            // Construct a DataRequest and send over the data layer
+            PutDataMapRequest putDMR = PutDataMapRequest.create(path);
+            putDMR.getDataMap().putAll(dataMap);
+            PutDataRequest request = putDMR.asPutDataRequest();
+            DataApi.DataItemResult result = Wearable.DataApi.putDataItem(googleClient, request).await();
+            if (result.getStatus().isSuccess()) {
+                Log.v("myTag", "DataMap: " + dataMap + " sent successfully to data layer ");
+            } else {
+                // Log an error
+                Log.v("myTag", "ERROR: failed to send DataMap to data layer");
             }
         }
     }
